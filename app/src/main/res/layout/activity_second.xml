@@ -44,6 +44,20 @@
         app:layout_constraintVertical_bias="0.0"
         tools:layout_editor_absoluteX="-3dp" />
 
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        android:layout_row=""
+
+        <Button
+            android:id="@+id/btn_novoItem"
+            android:layout_width="102dp"
+            android:layout_height="wrap_content"
+            android:layout_row="1"
+            android:layout_column="0"
+            android:text="CriarItem" />
+    </GridLayout>
+
     <Button
         android:background="@android:color/holo_blue_dark"
         android:textColor="@android:color/white"

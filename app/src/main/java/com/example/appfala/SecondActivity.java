@@ -3,8 +3,10 @@ package com.example.appfala;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -19,33 +21,42 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class SecondActivity extends AppCompatActivity {
 
     ImageView fotoPerfil;
     TextView nomeUsuario, email, id;
-    Button signOut;
+    Button signOut, novoItem;
     GoogleSignInClient mGoogleSignInClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_second);
 
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestEmail()
                 .build();
-        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        fotoPerfil = findViewById(R.id.iv_fotoPerfil);
+            mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
+            fotoPerfil = findViewById(R.id.iv_fotoPerfil);
 
-        email = findViewById(R.id.tv_email);
-        nomeUsuario = findViewById(R.id.tv_nomeUsuario);
-        id = findViewById(R.id.tv_id);
+            email = findViewById(R.id.tv_email);
+            nomeUsuario = findViewById(R.id.tv_nomeUsuario);
+            id = findViewById(R.id.tv_id);
+            novoItem = findViewById(R.id.btn_novoItem);
 
-        signOut = findViewById(R.id.btn_logout);
-        signOut.setOnClickListener(new View.OnClickListener() {
+            signOut = findViewById(R.id.btn_logout);
+            signOut.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
                 switch (v.getId()) {
@@ -58,8 +69,11 @@ public class SecondActivity extends AppCompatActivity {
             }
         });
 
+
         GoogleSignInAccount acct = GoogleSignIn.getLastSignedInAccount(this);
+
         if (acct != null) {
+
             String personName = acct.getDisplayName();
             String personEmail = acct.getEmail();
             String personId = acct.getId();
@@ -70,9 +84,19 @@ public class SecondActivity extends AppCompatActivity {
             id.setText(personId);
 
             Glide.with(this).load(String.valueOf(personPhoto)).into(fotoPerfil);
-
         }
 
+        novoItem.setOnClickListener(new View.OnClickListener() {
+            @Override
+
+            public void onClick(View v) {
+
+                Intent intent = new Intent(SecondActivity.this, NovoItem.class);
+                intent.putExtra("ID", acct.getId());
+
+                startActivity(intent);
+            }
+        });
     }
 
     private void signOut() {
