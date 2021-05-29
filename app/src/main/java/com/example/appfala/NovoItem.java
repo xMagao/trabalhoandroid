@@ -36,8 +36,7 @@ public class NovoItem extends AppCompatActivity {
     private Button uploadBtn;
     private ProgressBar progressBar;
 
-
-    private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Image");
+    private DatabaseReference root = FirebaseDatabase.getInstance().getReference("Users");
     private StorageReference reference = FirebaseStorage.getInstance().getReference();
 
     @Override
@@ -88,7 +87,6 @@ public class NovoItem extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 2 && resultCode == RESULT_OK && data != null){
-
             imageUri = data.getData();
             imageView.setImageURI(imageUri);
 
@@ -101,6 +99,7 @@ public class NovoItem extends AppCompatActivity {
         String id = intent.getStringExtra("ID");
 
         final StorageReference fileRef = reference.child(System.currentTimeMillis() + "." + getFileExtension(uri));
+
         fileRef.putFile(uri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -108,10 +107,10 @@ public class NovoItem extends AppCompatActivity {
                     @Override
                     public void onSuccess(Uri uri) {
 
-                        Item item = new Item(uri.toString());
-
+                        Item item = new Item(uri.toString(), editText.getText().toString());
                         String modelId = root.push().getKey();
-                        root.child(id).child(editText.getText().toString()).child(modelId).setValue(item);
+
+                        root.child(id).child(modelId).setValue(item);
                         progressBar.setVisibility(View.INVISIBLE);
                         Toast.makeText(NovoItem.this, "Uploaded Successfully", Toast.LENGTH_SHORT).show();
                         imageView.setImageResource(R.drawable.add_image);

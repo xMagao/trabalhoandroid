@@ -1,18 +1,17 @@
 package com.example.appfala;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 public class Item{
 
-    private String imagemURL;
+    private String imagemURL, nome;
 
     public Item(){ }
 
-    public Item(String imagemURL) {
+    public Item(String imagemURL, String nome) {
         this.imagemURL = imagemURL;
+        this.nome = nome;
     }
 
     public String getImagem() {
@@ -23,9 +22,8 @@ public class Item{
         this.imagemURL = imagem;
     }
 
-    public void salvar(String id, String nomeItem){
+    public String getNome() { return nome; }
 
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference();
-        reference.child("users").child(id).child(nomeItem).setValue(this);
-    }
+    public void setNome(String nome) { this.nome = nome; }
+
 }
