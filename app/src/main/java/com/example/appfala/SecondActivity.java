@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +37,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class SecondActivity extends AppCompatActivity {
 
@@ -46,8 +50,11 @@ public class SecondActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     public RecyclerView recyclerView;
 
+    private TextToSpeech mTTS;
+
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,8 +70,30 @@ public class SecondActivity extends AppCompatActivity {
             recyclerView = findViewById(R.id.recycler_view);
             recyclerView.setHasFixedSize(true);
 
-            GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(this,3, GridLayoutManager.VERTICAL, false);
             recyclerView.setLayoutManager(gridLayoutManager);
+
+            recyclerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+                }
+            });
+
+            mTTS = new TextToSpeech(this, new TextToSpeech.OnInitListener() {
+                @Override
+                public void onInit(int status) {
+                    if(status == TextToSpeech.SUCCESS){
+                        int result = mTTS.setLanguage(Locale.getDefault());
+
+                        if(result == TextToSpeech.LANG_MISSING_DATA || result == TextToSpeech.LANG_NOT_SUPPORTED){
+                            Log.e("TTS", "Lingua não suportada.");
+                        }else{
+
+                        }
+                    }
+                }
+            });
 
             fotoPerfil = findViewById(R.id.iv_fotoPerfil);
 
@@ -138,6 +167,12 @@ public class SecondActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull ViewHolder holder, int position, @NonNull Item model) {
                         holder.setdetails(getApplication(), model.getNome(), model.getImagem());
+                        holder.view.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                speak(model);
+                            }
+                        });
                     }
 
                     @NonNull
@@ -164,4 +199,19 @@ public class SecondActivity extends AppCompatActivity {
                         finish();
                     }});
     }
+
+    private void speak(Item model){
+
+        String text = model.getNome();
+        float pitch = 0.8f;
+        float speed = 0.5f;
+
+        mTTS.setPitch(pitch);
+        mTTS.setSpeechRate(speed);
+
+        mTTS.speak(text, TextToSpeech.QUEUE_FLUSH, null);
+
+    }
+
+
 }
