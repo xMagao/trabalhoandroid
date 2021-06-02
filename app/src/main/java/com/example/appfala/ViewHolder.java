@@ -33,7 +33,6 @@ public class ViewHolder extends RecyclerView.ViewHolder {
         textView.setText(title);
         Picasso.get().load(image).into(imageView);
 
-
         //Animation animation = AnimationUtils.loadAnimation(context, android.R.anim.slide_in_left);
         //itemView.startAnimation(animation);
 

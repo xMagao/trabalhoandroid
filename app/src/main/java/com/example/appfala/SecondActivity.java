@@ -55,7 +55,6 @@ public class SecondActivity extends AppCompatActivity {
     FirebaseDatabase firebaseDatabase;
     DatabaseReference databaseReference;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -213,5 +212,13 @@ public class SecondActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onDestroy() {
 
+        if(mTTS != null){
+            mTTS.stop();
+            mTTS.shutdown();
+        }
+        super.onDestroy();
+    }
 }
